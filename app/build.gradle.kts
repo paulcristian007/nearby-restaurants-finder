@@ -50,7 +50,7 @@ android {
 }
 
 dependencies {
-
+    implementation("com.squareup.picasso:picasso:2.71828")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.compose.material:material:1.3.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
@@ -83,4 +83,10 @@ dependencies {
 
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.maps.android:maps-compose:2.7.2")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.23.1")
+
 }

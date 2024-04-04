@@ -6,6 +6,7 @@ sealed interface Result<out T> {
     data class Success<T>(val data: T) : Result<T>
     object Distances : Result<Nothing>
     data class Error(val exception: Throwable? = null) : Result<Nothing>
+    data class Photo<T>(val data: T): Result<T>
     data class Sorted<T>(val data: T): Result<T>
     object Loading : Result<Nothing>
 }

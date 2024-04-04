@@ -21,45 +21,51 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
 
 class RestaurantsViewModel(private val service: RestaurantServices): ViewModel() {
     val uiState: MutableStateFlow<Result<List<Restaurant>>> = service.restaurantsFlow
     val nextPageState: MutableStateFlow<Boolean> = service.nextPageFlow
+    val photoState: MutableStateFlow<String> = service.photosFlow
 
     init {
         Log.d(TAG, "init")
     }
 
-    fun loadRestaurants(distance: Int, selectedMode: String) {
+    fun loadRestaurants(distance: Int, selectedMode: String, lat: Double, lng: Double) {
         viewModelScope.launch {
-            val apiKey = "AIzaSyCHsimVHnZfJespUMOWdKqBCLOfcQFwFKg"
-            val location = "45.882189,22.908367"  // Example: Latitude,Longitude
-            service.getRestaurants(apiKey, location, distance, selectedMode)
+            val location = "$lat,$lng"
+            service.getRestaurants(location, distance, selectedMode)
         }
     }
 
-    fun calcDistances(restaurants: List<Restaurant>) {
+    fun calcDistances(restaurants: List<Restaurant>, lat: Double, lng: Double) {
         for (restaurant in restaurants)
             if (restaurant.distance == null) {
                 viewModelScope.launch {
-                    val apiKey = "AIzaSyCHsimVHnZfJespUMOWdKqBCLOfcQFwFKg"
                     val origin =
                         "${restaurant.geometry.location.lat},${restaurant.geometry.location.lng}"
-                    val destination = "45.882189,22.908367"
+                    val destination = "$lat,$lng"
                     val mode = "walking"
-                    service.getDistance(apiKey, origin, destination, mode, restaurant)
+                    service.getDistance(origin, destination, mode, restaurant)
                 }
             }
     }
 
-    fun sortRestaurants() {
+    fun sortRestaurants(distance: Double) {
         viewModelScope.launch {
-            service.sortRestaurants()
+            service.sortRestaurants(distance)
         }
     }
 
     fun reset() {
         service.reset()
+    }
+
+    fun loadImage(restaurant: Restaurant) {
+        viewModelScope.launch {
+            service.getPhoto(restaurant)
+        }
     }
 
     companion object {
