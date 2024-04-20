@@ -39,7 +39,7 @@ fun RestaurantList(restaurants: List<Restaurant>, onDisplay: (Restaurant) -> Uni
 
 @Composable
 fun RestaurantDetail(restaurant: Restaurant, onDisplay: (Restaurant) -> Unit) {
-    Log.d("RestaurantDetail", "on display $restaurant")
+    //Log.d("RestaurantDetail", "on display $restaurant")
     if (restaurant.distance != null) {
         Row {
                 Column {

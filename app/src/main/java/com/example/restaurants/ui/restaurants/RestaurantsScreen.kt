@@ -28,15 +28,17 @@ import com.example.restaurants.model.Restaurant
 fun RestaurantsScreen() {
     val restaurantsViewModel = viewModel<RestaurantsViewModel>(factory = RestaurantsViewModel.Factory)
     val mapsViewModel = viewModel<MapsViewModel>(factory = MapsViewModel.Factory)
-    val restaurantsState by restaurantsViewModel.uiState.collectAsStateWithLifecycle()
+    val restaurantsState by restaurantsViewModel.uiState!!.collectAsStateWithLifecycle(Result.Loading)
     var restaurants by rememberSaveable { mutableStateOf(listOf<Restaurant>()) }
-    val nextPage by restaurantsViewModel.nextPageState.collectAsStateWithLifecycle()
-    val photo by restaurantsViewModel.photoState.collectAsStateWithLifecycle()
+    //val nextPage by restaurantsViewModel.nextPageState.collectAsStateWithLifecycle()
+    val nextPage = restaurantsViewModel.nextPage
+    //val photo by restaurantsViewModel.photoState.collectAsStateWithLifecycle(false)
+    val photo = restaurantsViewModel.photo
     val lat = mapsViewModel.lat
     val lng = mapsViewModel.lng
     var mapDisplayed by rememberSaveable { mutableStateOf(false) }
 
-    Log.d("RestaurantScreen", "recompose $photo $nextPage $restaurantsState")
+    Log.d("RestaurantScreen", "recompose $photo")
 
     var distance by rememberSaveable { mutableStateOf("0") }
     val modes = listOf("walking", "driving", "cycling")
@@ -105,7 +107,8 @@ fun RestaurantsScreen() {
         Button(onClick = {
             restaurants = listOf()
             restaurantsViewModel.reset()
-            restaurantsViewModel.loadRestaurants(distance.toInt(), selectedMode, lat, lng)
+            restaurantsViewModel.getAll(distance.toInt(), selectedMode, lat, lng)
+            //restaurantsViewModel.loadRestaurants(distance.toInt(), selectedMode, lat, lng)
         }) {
             Text(text = "Search")
         }
@@ -116,8 +119,8 @@ fun RestaurantsScreen() {
         }*/
         if (nextPage) {
             Button(onClick = {
-                restaurantsViewModel.loadRestaurants(distance.toInt(), selectedMode, lat, lng)
-                Log.d("RestaurantScreen", restaurants.toString())
+                restaurantsViewModel.getAll(distance.toInt(), selectedMode, lat, lng)
+                //Log.d("RestaurantScreen", restaurants.toString())
             }) {
                 Text(text = "Load more data")
             }
@@ -131,27 +134,27 @@ fun RestaurantsScreen() {
                 CircularProgressIndicator()
             }
 
-            is Result.Success -> {
+            /*is Result.Success -> {
                 CircularProgressIndicator()
-                restaurantsViewModel.calcDistances((restaurantsState as Result.Success<List<Restaurant>>).data, lat, lng)
+                restaurantsViewModel.calcDistances(selectedMode, lat, lng)
             }
 
             is Result.Distances -> {
                 CircularProgressIndicator()
                 restaurantsViewModel.sortRestaurants(distance.toDouble() / 1000.0)
-            }
+            }*/
 
-            is Result.Sorted -> {
-                restaurants = (restaurantsState as Result.Sorted<List<Restaurant>>).data
+            is Result.Success -> {
+                restaurants = (restaurantsState as Result.Success<List<Restaurant>>).data
             }
 
             is Result.Error -> {
                 Text(text = (restaurantsState as Result.Error).exception!!.message!!)
             }
 
-            is Result.Photo -> {
+            /*is Result.Photo -> {
                 restaurants = (restaurantsState as Result.Photo<List<Restaurant>>).data
-            }
+            }*/
         }
 
         Column {

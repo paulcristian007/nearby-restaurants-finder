@@ -11,5 +11,6 @@ data class Restaurant(
     val count: Int,
     var distance: String? = null,
     val photos: List<Photo>?,
-    var map: Bitmap?
+    var map: Bitmap?,
+    var startedDownloading: Boolean = false
 )
