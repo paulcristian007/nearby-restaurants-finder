@@ -1,11 +1,9 @@
 package com.example.restaurants.ui.restaurants
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.restaurants.R
 import com.example.restaurants.model.Restaurant
-import com.google.maps.android.compose.GoogleMap
 
 @Composable
 fun RestaurantList(restaurants: List<Restaurant>, onDisplay: (Restaurant) -> Unit) {
@@ -43,9 +40,9 @@ fun RestaurantDetail(restaurant: Restaurant, onDisplay: (Restaurant) -> Unit) {
     if (restaurant.distance != null) {
         Row {
                 Column {
-                    if (restaurant.map != null) {
+                    if (restaurant.displayImage != null) {
                         Image(
-                        bitmap = restaurant.map!!.asImageBitmap(),
+                        bitmap = restaurant.displayImage!!.asImageBitmap(),
                         contentDescription = "Bitmap Image"
                         )
                     }

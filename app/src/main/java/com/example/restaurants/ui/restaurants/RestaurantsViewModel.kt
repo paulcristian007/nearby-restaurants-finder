@@ -36,23 +36,12 @@ import java.util.concurrent.CompletableFuture
 
 class RestaurantsViewModel(private val service: RestaurantServices): ViewModel() {
     val uiState: StateFlow<Result<List<Restaurant>>> = service.restaurantsFlow
-    //var uiState: Flow<Result<List<Restaurant>>> = service.getRestaurantsFlow()
-
     var photo by mutableStateOf("")
         private set
     var nextPage by mutableStateOf(false)
         private set
     init {
         Log.d(TAG, "init")
-        //collectFlow()
-    }
-
-     fun collectFlow() {
-        viewModelScope.launch {
-            service.flooow.collect {
-                Log.d(TAG, "collected $it")
-            }
-        }
     }
 
     fun reset() {
@@ -67,13 +56,8 @@ class RestaurantsViewModel(private val service: RestaurantServices): ViewModel()
     }
     fun getAll(distance: Int, selectedMode: String, lat: Double, lng: Double) {
         viewModelScope.launch {
-             nextPage = service.loadRestaurants(distance, selectedMode, lat, lng)
+            nextPage = service.loadRestaurants(distance, selectedMode, lat, lng)
         }
-        /*viewModelScope.launch {
-            service.getRestaurantsFlow("$lat,$lng", distance, selectedMode).collect {
-
-            }
-        }*/
     }
 
     companion object {

@@ -28,17 +28,15 @@ import com.example.restaurants.model.Restaurant
 fun RestaurantsScreen() {
     val restaurantsViewModel = viewModel<RestaurantsViewModel>(factory = RestaurantsViewModel.Factory)
     val mapsViewModel = viewModel<MapsViewModel>(factory = MapsViewModel.Factory)
-    val restaurantsState by restaurantsViewModel.uiState!!.collectAsStateWithLifecycle(Result.Loading)
+    val restaurantsState by restaurantsViewModel.uiState.collectAsStateWithLifecycle(Result.Loading)
     var restaurants by rememberSaveable { mutableStateOf(listOf<Restaurant>()) }
-    //val nextPage by restaurantsViewModel.nextPageState.collectAsStateWithLifecycle()
     val nextPage = restaurantsViewModel.nextPage
-    //val photo by restaurantsViewModel.photoState.collectAsStateWithLifecycle(false)
     val photo = restaurantsViewModel.photo
     val lat = mapsViewModel.lat
     val lng = mapsViewModel.lng
     var mapDisplayed by rememberSaveable { mutableStateOf(false) }
 
-    Log.d("RestaurantScreen", "recompose $photo")
+    Log.d("RestaurantScreen", "recompose")
 
     var distance by rememberSaveable { mutableStateOf("0") }
     val modes = listOf("walking", "driving", "cycling")
@@ -108,24 +106,17 @@ fun RestaurantsScreen() {
             restaurants = listOf()
             restaurantsViewModel.reset()
             restaurantsViewModel.getAll(distance.toInt(), selectedMode, lat, lng)
-            //restaurantsViewModel.loadRestaurants(distance.toInt(), selectedMode, lat, lng)
         }) {
             Text(text = "Search")
         }
-        /*Button(onClick = {
-            restaurantsViewModel.loadImage(restaurants[0])
-        }) {
-            Text(text = "Load Image")
-        }*/
+
         if (nextPage) {
             Button(onClick = {
                 restaurantsViewModel.getAll(distance.toInt(), selectedMode, lat, lng)
-                //Log.d("RestaurantScreen", restaurants.toString())
             }) {
                 Text(text = "Load more data")
             }
         }
-
 
         when (restaurantsState) {
             is Result.Start -> {
@@ -133,28 +124,12 @@ fun RestaurantsScreen() {
             is Result.Loading -> {
                 CircularProgressIndicator()
             }
-
-            /*is Result.Success -> {
-                CircularProgressIndicator()
-                restaurantsViewModel.calcDistances(selectedMode, lat, lng)
-            }
-
-            is Result.Distances -> {
-                CircularProgressIndicator()
-                restaurantsViewModel.sortRestaurants(distance.toDouble() / 1000.0)
-            }*/
-
             is Result.Success -> {
                 restaurants = (restaurantsState as Result.Success<List<Restaurant>>).data
             }
-
             is Result.Error -> {
                 Text(text = (restaurantsState as Result.Error).exception!!.message!!)
             }
-
-            /*is Result.Photo -> {
-                restaurants = (restaurantsState as Result.Photo<List<Restaurant>>).data
-            }*/
         }
 
         Column {
