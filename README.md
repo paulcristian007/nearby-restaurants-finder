@@ -1,5 +1,9 @@
 # Nearby Restaurants Finder
+A mobile application that helps users discover nearby restaurants using Google Maps services.
 
+The application retrieves restaurant information, calculates real driving/walking distances, filters results based on user preferences, and sorts restaurants by relevance.
+
+The project focuses on asynchronous programming, efficient API communication, and responsive user experience.
 ## Tech Stack
 
 - Kotlin
