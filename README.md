@@ -138,7 +138,3 @@ Restaurant images are loaded using the Picasso framework.
 The image reference received from Google Places is converted into a valid image request and downloaded asynchronously.
 
 ---
-
-# Demo
-
-<img src="..." width="400"/>
